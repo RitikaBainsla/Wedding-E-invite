@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tanishka & Mayank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f0e9;overflow-x:hidden}
+.page{
+ position:relative;width:100%;max-width:1024px;margin:0 auto;line-height:0;
+ opacity:0;transform:translateY(28px);transition:opacity .85s ease,transform .85s ease;
+ overflow:hidden;
+}
+.page.show{opacity:1;transform:translateY(0)}
+.page img{display:block;width:100%;height:auto}
+
+/* Opening video */
+#intro{
+ position:fixed;inset:0;z-index:1000;background:#000;
+ display:flex;align-items:center;justify-content:center;
+}
+#intro video{width:100%;height:100%;object-fit:cover}
+#tap{
+ position:absolute;bottom:7vh;left:50%;transform:translateX(-50%);
+ padding:15px 30px;border:1px solid rgba(255,255,255,.9);
+ border-radius:999px;background:rgba(0,0,0,.16);backdrop-filter:blur(6px);
+ color:#fff;font:600 12px Arial,sans-serif;letter-spacing:2px;
+ text-transform:uppercase;cursor:pointer;
+}
+#intro.out{animation:fade .8s forwards}
+@keyframes fade{to{opacity:0;visibility:hidden}}
+
+/* Petals */
+.petals{
+ position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20;
+}
+.petal{
+ position:absolute;width:10px;height:7px;
+ border-radius:70% 30% 70% 30%;
+ background:rgba(248,190,195,.78);
+ filter:drop-shadow(0 1px 1px rgba(110,60,60,.12));
+ animation:fall linear infinite, sway ease-in-out infinite alternate;
+}
+@keyframes fall{
+ from{transform:translate3d(var(--x),-35px,0) rotate(0deg)}
+ to{transform:translate3d(calc(var(--x) + var(--drift)) ,110vh,0) rotate(420deg)}
+}
+@keyframes sway{
+ from{margin-left:-18px}to{margin-left:18px}
+}
+
+/* Scratch card only on page 3 */
+.scratch-wrap{
+ position:absolute;left:18%;top:34%;width:64%;aspect-ratio:2.15/1;
+ border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(70,45,25,.18);
+ line-height:normal;z-index:30;
+}
+.reveal{
+ position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+ text-align:center;
+ background:linear-gradient(135deg,#fffdf9,#f7eee4);
+ color:#8c6a43;
+ font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;
+ font-size:clamp(22px,4.6vw,52px);line-height:.95;letter-spacing:.5px;
+ text-shadow:0 1px 0 rgba(255,255,255,.8);
+}
+#scratch{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+
+/* New plain map page at the very end */
+.map-page{
+ position:relative;width:100%;max-width:1024px;min-height:100vh;margin:0 auto;
+ background:linear-gradient(180deg,#fffdf9,#f6efe5);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ padding:65px 8%;text-align:center;overflow:hidden;
+ opacity:0;transform:translateY(28px);transition:opacity .85s ease,transform .85s ease;
+}
+.map-page.show{opacity:1;transform:translateY(0)}
+.map-page:before,.map-page:after{
+ content:"";position:absolute;width:260px;height:260px;border-radius:50%;
+ background:radial-gradient(circle,rgba(224,191,163,.25),transparent 68%);
+}
+.map-page:before{top:-80px;left:-80px}.map-page:after{bottom:-90px;right:-80px}
+.map-title{
+ margin:0;color:#927048;font-family:"Great Vibes",cursive;
+ font-size:clamp(58px,10vw,110px);line-height:1;position:relative;z-index:2;
+}
+.map-sub{
+ margin:18px 0 34px;color:#806b55;font:600 13px Georgia,serif;
+ letter-spacing:2px;text-transform:uppercase;position:relative;z-index:2;
+}
+.map-wrap{
+ width:min(850px,92vw);aspect-ratio:1.85/1;position:relative;z-index:2;
+ overflow:hidden;border-radius:16px;border:1px solid rgba(157,119,73,.42);
+ box-shadow:0 16px 45px rgba(74,53,35,.16);background:#fff;
+}
+.map-wrap iframe{display:block;width:100%;height:100%;border:0}
+.directions{
+ display:inline-block;margin-top:25px;padding:14px 24px;border-radius:999px;
+ background:#a98762;color:#fff;text-decoration:none;
+ font:600 12px Arial,sans-serif;letter-spacing:1.5px;text-transform:uppercase;
+ position:relative;z-index:2;
+}
+.map-page .petals{z-index:10}
+@media(max-width:600px){
+ .scratch-wrap{left:13%;width:74%;top:33.5%}
+ .map-wrap{width:94vw;aspect-ratio:1.2/1}
+}
+</style>
+</head>
+<body>
+
+<div id="intro">
+ <video autoplay muted playsinline preload="auto"><source src="Curtain.mp4" type="video/mp4"></video>
+ <button id="tap">Tap to Enter</button>
+</div>
+
+<div class="page"><img src="page1.jpg" alt="Wedding invitation page 1"><div class="petals"></div></div>
+<div class="page"><img src="page2.jpg" alt="Wedding invitation page 2"><div class="petals"></div></div>
+
+<div class="page" id="page3">
+ <img src="page3.jpg" alt="Wedding invitation page 3">
+ <div class="scratch-wrap">
+  <div class="reveal">24th–25th<br>November 2026</div>
+  <canvas id="scratch"></canvas>
+ </div>
+ <div class="petals"></div>
+</div>
+
+<div class="page"><img src="page4.jpg" alt="Wedding invitation page 4"><div class="petals"></div></div>
+<div class="page"><img src="page5.jpg" alt="Wedding invitation page 5"><div class="petals"></div></div>
+<div class="page"><img src="page6.jpg" alt="Wedding invitation page 6"><div class="petals"></div></div>
+<div class="page"><img src="page7.jpg" alt="Wedding invitation page 7"><div class="petals"></div></div>
+<div class="page"><img src="page8.jpg" alt="Wedding invitation page 8"><div class="petals"></div></div>
+
+<div class="map-page">
+ <div class="petals"></div>
+ <h1 class="map-title">Find Us Here</h1>
+ <div class="map-sub">ITC Rajputana • Jaipur</div>
+ <div class="map-wrap">
+  <iframe title="ITC Rajputana Jaipur"
+   src="https://www.google.com/maps?q=ITC+Rajputana,+Jaipur&output=embed"
+   loading="lazy"></iframe>
+ </div>
+ <a class="directions" target="_blank" rel="noopener"
+  href="https://www.google.com/maps/dir/?api=1&destination=ITC+Rajputana,+Jaipur">Get Directions</a>
+</div>
+
+<script>
+/* Opening */
+const intro=document.getElementById('intro');
+document.getElementById('tap').addEventListener('click',()=>{
+ intro.classList.add('out');setTimeout(()=>intro.remove(),850);
+});
+
+/* Gentle page reveal animation */
+const observer=new IntersectionObserver(entries=>{
+ entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show')});
+},{threshold:.12});
+document.querySelectorAll('.page,.map-page').forEach(el=>observer.observe(el));
+
+/* Falling petals on every invitation page and the map page */
+document.querySelectorAll('.petals').forEach((layer,index)=>{
+ const count=14;
+ for(let i=0;i<count;i++){
+  const p=document.createElement('i');p.className='petal';
+  p.style.left=(Math.random()*100)+'%';
+  p.style.setProperty('--x',(Math.random()*30-15)+'px');
+  p.style.setProperty('--drift',(Math.random()*90-45)+'px');
+  p.style.animationDuration=(7+Math.random()*7)+'s,'+(1.8+Math.random()*2.8)+'s';
+  p.style.animationDelay=(-Math.random()*12)+'s,'+(-Math.random()*3)+'s';
+  p.style.opacity=(.38+Math.random()*.45);
+  p.style.transform='scale('+(0.7+Math.random()*1.1)+')';
+  layer.appendChild(p);
+ }
+});
+
+/* Lighter scratch card */
+const canvas=document.getElementById('scratch');
+const ctx=canvas.getContext('2d',{willReadFrequently:true});
+const wrap=document.querySelector('.scratch-wrap');
+let down=false,lastX=0,lastY=0,completed=false;
+function setup(){
+ const dpr=window.devicePixelRatio||1,r=wrap.getBoundingClientRect();
+ canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);
+ canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';
+ ctx.setTransform(dpr,0,0,dpr,0,0);
+ const g=ctx.createLinearGradient(0,0,r.width,r.height);
+ g.addColorStop(0,'#ead8c8');g.addColorStop(.5,'#f5e8de');g.addColorStop(1,'#dfc7b5');
+ ctx.globalCompositeOperation='source-over';ctx.fillStyle=g;ctx.fillRect(0,0,r.width,r.height);
+ ctx.fillStyle='rgba(117,91,64,.78)';ctx.textAlign='center';ctx.textBaseline='middle';
+ ctx.font=`600 ${Math.max(14,r.width*.055)}px Georgia`;
+ ctx.fillText('SCRATCH HERE',r.width/2,r.height/2);
+}
+setup();window.addEventListener('resize',setup);
+function pos(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+function erase(x,y,start){
+ ctx.globalCompositeOperation='destination-out';ctx.lineCap='round';ctx.lineJoin='round';
+ ctx.lineWidth=Math.max(34,wrap.getBoundingClientRect().width*.11);
+ if(start){ctx.beginPath();ctx.arc(x,y,ctx.lineWidth/2,0,Math.PI*2);ctx.fill()}
+ else{ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(x,y);ctx.stroke()}
+ lastX=x;lastY=y;
+}
+function check(){
+ if(completed)return;const d=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+ let clear=0,total=d.length/4;for(let i=3;i<d.length;i+=4)if(d[i]<30)clear++;
+ if(clear/total>.55){completed=true;canvas.style.transition='opacity .6s';canvas.style.opacity='0';
+ setTimeout(()=>canvas.style.pointerEvents='none',650);}
+}
+canvas.addEventListener('pointerdown',e=>{down=true;canvas.setPointerCapture(e.pointerId);const p=pos(e);erase(p.x,p.y,true)});
+canvas.addEventListener('pointermove',e=>{if(!down)return;const p=pos(e);erase(p.x,p.y,false)});
+canvas.addEventListener('pointerup',()=>{down=false;check()});
+canvas.addEventListener('pointercancel',()=>{down=false;check()});
+</script>
+</body>
+</html>
